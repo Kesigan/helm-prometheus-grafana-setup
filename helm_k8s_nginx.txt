@@ -1,0 +1,137 @@
+
+D:\helm_chart_nginx_K8s>helm repo add bitnami https://charts.bitnami.com/bitnami
+"bitnami" has been added to your repositories
+
+D:\helm_chart_nginx_K8s>helm repo list
+NAME                    URL
+prometheus-community    https://prometheus-community.github.io/helm-charts
+stable                  https://charts.helm.sh/stable
+grafana                 https://grafana.github.io/helm-charts
+bitnami                 https://charts.bitnami.com/bitnami
+
+D:\helm_chart_nginx_K8s>helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "grafana" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "bitnami" chart repository
+Update Complete. ⎈Happy Helming!⎈
+
+D:\helm_chart_nginx_K8s>
+D:\helm_chart_nginx_K8s>helm install nginx bitnami/nginx
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: nginx
+CHART VERSION: 15.3.5
+APP VERSION: 1.25.3
+
+** Please be patient while the chart is being deployed **
+NGINX can be accessed through the following DNS name from within your cluster:
+
+    nginx.default.svc.cluster.local (port 80)
+
+To access NGINX from outside the cluster, follow the steps below:
+
+1. Get the NGINX URL by running these commands:
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: 'kubectl get svc --namespace default -w nginx'
+
+    export SERVICE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].port}" services nginx)
+    export SERVICE_IP=$(kubectl get svc --namespace default nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    echo "http://${SERVICE_IP}:${SERVICE_PORT}"
+
+
+D:\helm_chart_nginx_K8s>kubectl get all
+NAME                                                     READY   STATUS    RESTARTS      AGE
+pod/grafana-dcc6898c7-2dlkt                              1/1     Running   1 (44m ago)   3d10h
+pod/mongo-deployment-85d45f7888-68wzn                    1/1     Running   1 (44m ago)   3d20h
+pod/nginx-68c6b8747-jz8lk                                1/1     Running   0             70s
+pod/prometheus-alertmanager-0                            1/1     Running   1 (44m ago)   3d11h
+pod/prometheus-kube-state-metrics-5b74ccb6b4-zxdlq       1/1     Running   2 (43m ago)   3d11h
+pod/prometheus-prometheus-node-exporter-6zz8k            1/1     Running   1 (44m ago)   3d11h
+pod/prometheus-prometheus-pushgateway-79ff799669-rfgk2   1/1     Running   1 (44m ago)   3d11h
+pod/prometheus-server-6cbdf9bd74-82kbf                   2/2     Running   2 (44m ago)   3d11h
+pod/webapp-deployment-f8d7df85d-kgspk                    1/1     Running   1 (44m ago)   3d20h
+
+NAME                                          TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+service/grafana                               ClusterIP      10.98.121.0      <none>        80/TCP                         3d10h
+service/grafana-ext                           NodePort       10.106.24.16     <none>        80:32384/TCP                   3d10h
+service/kubelet                               ClusterIP      None             <none>        10250/TCP,10255/TCP,4194/TCP   3d10h
+service/kubernetes                            ClusterIP      10.96.0.1        <none>        443/TCP                        4d7h
+service/mongo-service                         ClusterIP      10.104.211.121   <none>        27017/TCP                      3d20h
+service/nginx                                 LoadBalancer   10.104.47.150    <pending>     80:31891/TCP                   70s
+service/prometheus-alertmanager               ClusterIP      10.105.222.0     <none>        9093/TCP                       3d11h
+service/prometheus-alertmanager-headless      ClusterIP      None             <none>        9093/TCP                       3d11h
+service/prometheus-kube-state-metrics         ClusterIP      10.97.231.238    <none>        8080/TCP                       3d11h
+service/prometheus-prometheus-node-exporter   ClusterIP      10.105.218.100   <none>        9100/TCP                       3d11h
+service/prometheus-prometheus-pushgateway     ClusterIP      10.111.128.182   <none>        9091/TCP                       3d11h
+service/prometheus-server                     ClusterIP      10.107.200.194   <none>        80/TCP                         3d11h
+service/prometheus-server-ext                 NodePort       10.104.140.129   <none>        80:31053/TCP                   3d11h
+service/webapp-service                        LoadBalancer   10.101.197.138   <pending>     3000:30100/TCP                 3d20h
+
+NAME                                                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+daemonset.apps/prometheus-prometheus-node-exporter   1         1         1       1            1           kubernetes.io/os=linux   3d11h
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grafana                             1/1     1            1           3d10h
+deployment.apps/mongo-deployment                    1/1     1            1           3d20h
+deployment.apps/nginx                               1/1     1            1           70s
+deployment.apps/prometheus-kube-state-metrics       1/1     1            1           3d11h
+deployment.apps/prometheus-prometheus-pushgateway   1/1     1            1           3d11h
+deployment.apps/prometheus-server                   1/1     1            1           3d11h
+deployment.apps/webapp-deployment                   1/1     1            1           3d20h
+
+NAME                                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/grafana-dcc6898c7                              1         1         1       3d10h
+replicaset.apps/mongo-deployment-85d45f7888                    1         1         1       3d20h
+replicaset.apps/nginx-68c6b8747                                1         1         1       70s
+replicaset.apps/prometheus-kube-state-metrics-5b74ccb6b4       1         1         1       3d11h
+replicaset.apps/prometheus-prometheus-pushgateway-79ff799669   1         1         1       3d11h
+replicaset.apps/prometheus-server-6cbdf9bd74                   1         1         1       3d11h
+replicaset.apps/webapp-deployment-f8d7df85d                    1         1         1       3d20h
+
+NAME                                       READY   AGE
+statefulset.apps/prometheus-alertmanager   1/1     3d11h
+
+D:\helm_chart_nginx_K8s>kubectl get svc
+NAME                                  TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+grafana                               ClusterIP      10.98.121.0      <none>        80/TCP                         3d10h
+grafana-ext                           NodePort       10.106.24.16     <none>        80:32384/TCP                   3d10h
+kubelet                               ClusterIP      None             <none>        10250/TCP,10255/TCP,4194/TCP   3d10h
+kubernetes                            ClusterIP      10.96.0.1        <none>        443/TCP                        4d7h
+mongo-service                         ClusterIP      10.104.211.121   <none>        27017/TCP                      3d20h
+nginx                                 LoadBalancer   10.104.47.150    <pending>     80:31891/TCP                   96s
+prometheus-alertmanager               ClusterIP      10.105.222.0     <none>        9093/TCP                       3d11h
+prometheus-alertmanager-headless      ClusterIP      None             <none>        9093/TCP                       3d11h
+prometheus-kube-state-metrics         ClusterIP      10.97.231.238    <none>        8080/TCP                       3d11h
+prometheus-prometheus-node-exporter   ClusterIP      10.105.218.100   <none>        9100/TCP                       3d11h
+prometheus-prometheus-pushgateway     ClusterIP      10.111.128.182   <none>        9091/TCP                       3d11h
+prometheus-server                     ClusterIP      10.107.200.194   <none>        80/TCP                         3d11h
+prometheus-server-ext                 NodePort       10.104.140.129   <none>        80:31053/TCP                   3d11h
+webapp-service                        LoadBalancer   10.101.197.138   <pending>     3000:30100/TCP                 3d20h
+
+D:\helm_chart_nginx_K8s>helm list
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+grafana         default         1               2023-10-24 00:07:50.4129065 +0530 IST   deployed        grafana-6.61.1          10.1.5
+nginx           default         1               2023-10-27 10:37:59.4704077 +0530 IST   deployed        nginx-15.3.5            1.25.3
+prometheus      default         1               2023-10-23 23:25:17.4857405 +0530 IST   deployed        prometheus-25.2.0       v2.47.0
+
+D:\helm_chart_nginx_K8s>minikube service nginx
+W1027 10:40:33.090181   40508 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open C:\Users\kesig\.docker\contexts\meta\37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f\meta.json: The system cannot find the path specified.
+|-----------|-------|-------------|---------------------------|
+| NAMESPACE | NAME  | TARGET PORT |            URL            |
+|-----------|-------|-------------|---------------------------|
+| default   | nginx | http/80     | http://192.168.49.2:31891 |
+|-----------|-------|-------------|---------------------------|
+🏃  Starting tunnel for service nginx.
+|-----------|-------|-------------|------------------------|
+| NAMESPACE | NAME  | TARGET PORT |          URL           |
+|-----------|-------|-------------|------------------------|
+| default   | nginx |             | http://127.0.0.1:50886 |
+|-----------|-------|-------------|------------------------|
+🎉  Opening service default/nginx in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
